@@ -26,10 +26,12 @@ class Tree {
 
 let root = null;
 
+// Sorts the array from smallest to larger number
 const sortArray = (array) => {
   return array.sort((a, b) => a - b);
 };
 
+// Removes duplicates from the array
 const removeDuplicates = (array) => {
   for (let i = 0; i <= array.length; i++) {
     while (array[i] === array[i + 1]) {
@@ -41,6 +43,7 @@ const removeDuplicates = (array) => {
   }
 };
 
+// Builds the Balanced Search Tree
 const buildTree = (arr, start, end) => {
   if (start > end) return null;
 
@@ -52,22 +55,24 @@ const buildTree = (arr, start, end) => {
   return node;
 };
 
-const insert = (root, key) => {
+// Inserts another number into the Balanced Search Tree when called
+const insert = (root, key, arr) => {
   if (arr.indexOf(key) === -1) arr.push(key);
   if (!root) {
     root = new Node(key);
     return root;
   }
   if (key < root.data) {
-    root.left = insert(root.left, key);
+    root.left = insert(root.left, key, arr);
     return root;
   }
   if (key > root.data) {
-    root.right = insert(root.right, key);
+    root.right = insert(root.right, key, arr);
     return root;
   }
 };
 
+// Removes a number from the Balanced Search Tree when called
 const remove = (root, key) => {
   if (!root) {
     console.log("No root exists");
@@ -108,6 +113,7 @@ function minValue(root) {
   return minv;
 }
 
+// Finds the node containing the inputted value in the Balanced Search Tree.
 const find = (root, value) => {
   if (!root) {
     console.log("There is no root!");
@@ -125,6 +131,7 @@ const find = (root, value) => {
   return root;
 };
 
+// Prints out the Balanced Search Tree in level order.
 const levelOrder = (root) => {
   document.write("Level order: ");
   let queue = [];
@@ -150,6 +157,7 @@ const levelOrder = (root) => {
   document.write("<br>");
 };
 
+// Uses iteration to print out the Balanced Search Tree in level order.
 const levelOrderIteration = (root) => {
   if (root === null) return;
 
@@ -171,25 +179,17 @@ const levelOrderIteration = (root) => {
   return total;
 };
 
+// Prints out the Balanced Search Tree in order.
 // Inorder → Reads from left to right
 const inorder = (root) => {
   document.write("Inorder: ");
   const inorderArr = [];
   const inorderFunction = (root) => {
+    if (root === null) return root;
+    if (root.left) inorderFunction(root.left);
+    inorderArr.push(root.data);
     document.write(root.data + " ");
-    if (root.left === null) {
-      inorderArr.push(root.data);
-    }
-    // If there's still smaller nodes on the left, recur down
-    if (root.left !== null) {
-      // Push the leftmost node
-      inorderArr.push(root.data);
-
-      root.left = inorderFunction(root.left);
-      // Push parent node
-      // Push the rightmost node
-      root.right = inorderFunction(root.right);
-    }
+    root.right = inorderFunction(root.right);
     return root;
   };
   inorderFunction(root);
@@ -197,6 +197,7 @@ const inorder = (root) => {
   document.write("<br>");
 };
 
+// Prints out the Balanced Search Tree in pre order.
 // Preorder → Reads "root → all children left to right"
 const preorder = (root) => {
   document.write("Preorder: ");
@@ -214,6 +215,7 @@ const preorder = (root) => {
   document.write("<br>");
 };
 
+// Prints out the Balanced Search Tree in post order.
 // Postorder → Reads "Bottom left → sibling, parent → same for right hand side"
 const postorder = (root) => {
   document.write("Postorder: ");
@@ -230,6 +232,7 @@ const postorder = (root) => {
   console.log("Postorder:", postorderArr);
 };
 
+// Returns the height of the node inputted in the Balanced Search Tree
 // Height → Number of nodes from inputNode to longest leaf node
 const height = (inputNode) => {
   // Base Case
@@ -239,6 +242,7 @@ const height = (inputNode) => {
   return Math.max(height(inputNode.left), height(inputNode.right)) + 1;
 };
 
+// Returns the depth of the node inputted in the Balanced Search Tree
 const depth = (root, inputNode) => {
   const dfs = (node, currentDepth) => {
     // Base case
@@ -262,6 +266,7 @@ const depth = (root, inputNode) => {
   return dfs(root, 0);
 };
 
+// Checks if the Balanced Search Tree is actually balanced
 const isBalanced = (root) => {
   if (root === null) return -1;
 
@@ -271,6 +276,12 @@ const isBalanced = (root) => {
 
   const rightHeight = (rightRoot) => {
     if (rightRoot === null) return -1;
+    if (rightRoot === undefined) {
+      console.log("lol");
+      console.log(rightRoot);
+      // This logs as undefined when an error is thrown, so need to add additional checks to avoid an undefined root getting through
+      return;
+    }
     const right = rightHeight(rightRoot.right) + 1;
     const left = rightHeight(rightRoot.left) + 1;
     return Math.max(right, left);
@@ -290,9 +301,7 @@ const isBalanced = (root) => {
   } else return true;
 };
 
-// Write a rebalance function which rebalances an unbalanced tree.
-// Tip: You’ll want to use a traversal method to provide a new array to the buildTree function.
-
+// Rebalances the Balanced Search Tree in case it is not actually balanced.
 const rebalance = (root) => {
   let newArr = [];
 
@@ -308,50 +317,27 @@ const rebalance = (root) => {
   placeInArray(root);
   let sortedArray = sortArray(newArr);
   let duplicatesRemoved = removeDuplicates(newArr);
-  let long = arr.length;
+  let long = newArr.length;
   root = buildTree(sortedArray, 0, long - 1);
   prettyPrint(root);
+  return root;
 };
 
-// let arr = [5, 2, 1, 3, 6, 4, 7, 7, 4, 1, 7, 7, 2];
-
-// let sortedArray = sortArray(arr);
-// let duplicatesRemoved = removeDuplicates(arr);
-
-// let long = arr.length;
-// root = buildTree(sortedArray, 0, long - 1);
-
-// insert(root, 10);
-// remove(root, 6);
-// find(root, 3);
-// levelOrder(root);
-// levelOrderIteration(root);
-// inorder(root);
-// preorder(root);
-// postorder(root);
-// insert(root, 3.5);
-// insert(root, 1.1);
-// insert(root, 1.2);
-// insert(root, 6);
-// insert(root, 5.5);
-// insert(root, 5.8);
-// insert(root, 5.9);
-// insert(root, 64.7);
-// insert(root, 64.9);
-// height(root);
-// console.log("The height of the node is:", height(root));
-// depth(root, root.right.left);
-// console.log("The depth of the node is:", depth(root, root.right));
-
-// isBalanced(root);
-// prettyPrint(root);
-// rebalance(root);
+// The driverScript below does the following:
+// 1. Creates a binary search tree from an array of random numbers
+// 2. Confirms that the tree is balanced by calling isBalanced
+// 3. Prints out all the elements in level, pre, post, and in order
+// 4. Unbalances the tree by adding several numbers
+// 5. Confirms that the tree is unbalanced by calling isBalanced
+// 6. Balances the tree by calling rebalance
+// 7. Confirms that the tree is balanced by calling isBalanced
+// 8. Prints out all elements in level, pre, post, and in order
 
 const driverScript = () => {
-  // Makes the array (numArray) with random numbers
+  // 1. Makes the array (numArray) with random numbers
   const createArray = () => {
     let numArray = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 10; i++) {
       let num = Math.floor(Math.random() * 200);
       numArray.push(num);
     }
@@ -368,24 +354,46 @@ const driverScript = () => {
   let long = numArray.length;
   root = buildTree(numArray, 0, long - 1);
 
+  // 2. Confirms that the tree is balanced
   console.log(isBalanced(root));
 
+  // 3. Prints out all the elements in their respective orders
   levelOrder(root);
   preorder(root);
   postorder(root);
   inorder(root);
+  prettyPrint(root);
+
+  document.write("<br> Unbalance by adding more numbers <br><br>");
+
+  console.log("%c After insertion", "font-size: 16px");
+
+  // 4. Unbalances the tree by adding several numbers.
+  for (let i = 0; i < 10; i++) {
+    // Don't push if the item already exists in the array
+    let num = Math.floor(Math.random() * 100 + 100);
+    if (numArray.indexOf(num) === -1) insert(root, num, numArray);
+  }
+
+  document.write(numArray);
 
   prettyPrint(root);
+
+  // 5. Confirms that the tree is unbalanced by calling isBalanced
+  console.log(isBalanced(root));
+  console.log("%c After rebalancing", "font-size: 16px");
+
+  // 6. Balances the tree by calling rebalance
+  root = rebalance(root);
+
+  // 7. Confirms that the tree is balanced by calling isBalanced
+  console.log(isBalanced(root));
+
+  // 8. Prints out all elements in level, pre, post, and in order
+  levelOrder(root);
+  preorder(root);
+  postorder(root);
+  inorder(root);
 };
 
 driverScript();
-
-// Tie it all together
-// 1. Create a binary search tree from an array of random numbers. You can create a function if you want that returns an array of random numbers each time you call it.
-// 2. Confirm that the tree is balanced by calling isBalanced
-// 3. Print out all elements in level, pre, post, and in order
-// 4. Unbalance the tree by adding several numbers > 100
-// 5. Confirm that the tree is unbalanced by calling isBalanced
-// 6. Balance the tree by calling rebalance
-// 7. Confirm that the tree is balanced by calling isBalanced
-// 8. Print out all elements in level, pre, post, and in order
