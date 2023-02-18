@@ -334,6 +334,7 @@ const rebalance = (root) => {
 // 8. Prints out all elements in level, pre, post, and in order
 
 const driverScript = () => {
+  console.log("%c Start of driverScript.", "font-size: 16px");
   // 1. Makes the array (numArray) with random numbers
   const createArray = () => {
     let numArray = [];
@@ -356,6 +357,7 @@ const driverScript = () => {
 
   // 2. Confirms that the tree is balanced
   console.log(isBalanced(root));
+  console.log("The above shows if tree is balanced or not.");
 
   // 3. Prints out all the elements in their respective orders
   levelOrder(root);
@@ -366,7 +368,7 @@ const driverScript = () => {
 
   document.write("<br> Unbalance by adding more numbers <br><br>");
 
-  console.log("%c After insertion", "font-size: 16px");
+  console.log("%c After insertion of X numbers", "font-size: 16px");
 
   // 4. Unbalances the tree by adding several numbers.
   for (let i = 0; i < 10; i++) {
@@ -381,13 +383,15 @@ const driverScript = () => {
 
   // 5. Confirms that the tree is unbalanced by calling isBalanced
   console.log(isBalanced(root));
-  console.log("%c After rebalancing", "font-size: 16px");
+  console.log("The above shows if tree is balanced or not.");
+  console.log("%c After rebalancing the search tree", "font-size: 16px");
 
   // 6. Balances the tree by calling rebalance
   root = rebalance(root);
 
   // 7. Confirms that the tree is balanced by calling isBalanced
   console.log(isBalanced(root));
+  console.log("The above shows if tree is balanced or not.");
 
   // 8. Prints out all elements in level, pre, post, and in order
   levelOrder(root);
