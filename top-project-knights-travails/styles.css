@@ -1,3 +1,43 @@
 body {
   background-color: lightseagreen;
+  margin: 0;
+  /* display: grid; */
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+:root {
+  --cell: 75px;
+}
+
+.gameboardWrapper {
+  width: 750px;
+  height: 750px;
+  background-color: sandybrown;
+  display: grid;
+  justify-content: center;
+}
+
+.chessLetter {
+  background-color: aliceblue;
+}
+
+.gameboard {
+  display: grid;
+  grid-template-columns: repeat(8, 75px);
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.black {
+  background-color: black;
+}
+.white {
+  background-color: white;
 }
