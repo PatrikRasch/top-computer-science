@@ -22,9 +22,10 @@
 // [4,5]
 // [2,4]
 // [4,3]
-const gameboardWrapper = document.querySelector(".gameboardWrapper");
+const container = document.querySelector(".container");
 const gameboardNumbers = document.querySelector(".gameboardNumbers");
 const gameboard = document.querySelector(".gameboard");
+const gameboardWrapper = document.querySelector(".gameboardWrapper");
 
 const createGameboard = () => {
   for (i = 0; i < 8; i++) {
@@ -37,15 +38,4 @@ const createGameboard = () => {
   }
 };
 
-const createGameboardNumeration = () => {
-  for (let i = 97; i <= 104; i++) {
-    let letter = String.fromCharCode(i).toUpperCase();
-    let chessLetter = document.createElement("div");
-    chessLetter.classList.add("chessLetter");
-    chessLetter.textContent = letter;
-    gameboardNumbers.appendChild(chessLetter);
-  }
-};
-
-createGameboardNumeration();
 createGameboard();
