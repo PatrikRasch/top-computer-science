@@ -71,9 +71,9 @@ body {
   /* background-color: rgba(240, 223, 195, 255); */
 }
 
-.knight {
+.knightImg {
   position: absolute;
   max-width: 65px;
-  top: 528px;
-  left: 80px;
+  /* top: 528px; */
+  /* left: 80px; */
 }

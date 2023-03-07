@@ -27,11 +27,18 @@ const gameboardNumbers = document.querySelector(".gameboardNumbers");
 const gameboard = document.querySelector(".gameboard");
 const gameboardWrapper = document.querySelector(".gameboardWrapper");
 
+const knightImg = document.createElement("img");
+knightImg.src = "img/knight-pixel-art.png";
+knightImg.setAttribute("class", "knightImg");
+
+// Determines the starting position of the knight.
+const startPosition = [0, 1];
+
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
   for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++) {
-      let cell = document.createElement("div");
+      const cell = document.createElement("div");
       if ((i + j) % 2 === 0) cell.className = "cell white";
       else cell.className = "cell black";
       gameboard.appendChild(cell);
@@ -46,10 +53,41 @@ const idGameboard = () => {
     for (j = 0; j < 8; j++) {
       let letter = String.fromCharCode(97 + j).toUpperCase();
       gameboard.childNodes[num].id = letter + i;
+      gameboard.childNodes[num].dataset.coord = i - 1 + "," + j;
       num++;
     }
   }
 };
 
+// Matches the position of the knight to the startPosition array.
+const setKnightPosition = () => {
+  for (let i = 0; i < 64; i++) {
+    if (startPosition.toString() === gameboard.childNodes[i].dataset.coord) {
+      return gameboard.childNodes[i].appendChild(knightImg);
+    }
+  }
+};
+
+const knightMoves = () => {
+  let knightPosition = [2, 1];
+  console.log(knight);
+  knight.addEventListener("click", (e) => {
+    console.log("knight clicked");
+    knightPosition = [4, 2];
+    console.log(knightPosition);
+  });
+};
+
+const clickKnightPosition = () => {
+  gameboard.forEach((child) =>
+    addEventListener("click", (e) => {
+      console.log(child);
+    })
+  );
+};
+
 createGameboard();
 idGameboard();
+setKnightPosition();
+
+// clickKnightPosition();
