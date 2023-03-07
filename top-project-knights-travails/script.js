@@ -9,7 +9,7 @@
 // knightMoves([0,0],[3,3]) == [[0,0],[1,2],[3,3]]
 // knightMoves([3,3],[0,0]) == [[3,3],[1,2],[0,0]]
 
-// 1. Put together a script that creates a game board and a knight.
+// 1. Put together a script that creates a game board and a knight. → DONE
 
 // 2. Treat all possible moves the knight could make as children in a tree. Don’t allow any moves to go off the board.
 
@@ -27,15 +27,29 @@ const gameboardNumbers = document.querySelector(".gameboardNumbers");
 const gameboard = document.querySelector(".gameboard");
 const gameboardWrapper = document.querySelector(".gameboardWrapper");
 
+// Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
   for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++) {
       let cell = document.createElement("div");
-      if ((i + j) % 2 === 0) cell.className = "white cell";
-      else cell.className = "black cell";
+      if ((i + j) % 2 === 0) cell.className = "cell white";
+      else cell.className = "cell black";
       gameboard.appendChild(cell);
     }
   }
 };
 
+// Gives the chessboard squares their respective ID's in relation to how a traditional chessboard is labelled.
+const idGameboard = () => {
+  let num = 0;
+  for (i = 8; i > 0; i--) {
+    for (j = 0; j < 8; j++) {
+      let letter = String.fromCharCode(97 + j).toUpperCase();
+      gameboard.childNodes[num].id = letter + i;
+      num++;
+    }
+  }
+};
+
 createGameboard();
+idGameboard();

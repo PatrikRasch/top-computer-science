@@ -51,6 +51,7 @@ body {
   display: grid;
   grid-template-columns: repeat(8, 75px);
   height: 600px;
+  position: relative;
 }
 
 .cell {
@@ -72,5 +73,7 @@ body {
 
 .knight {
   position: absolute;
-  transform: scale(0.1);
+  max-width: 65px;
+  top: 528px;
+  left: 80px;
 }
