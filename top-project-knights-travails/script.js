@@ -32,7 +32,38 @@ knightImg.src = "img/knight-pixel-art.png";
 knightImg.setAttribute("class", "knightImg");
 
 // Determines the starting position of the knight.
-const startPosition = [0, 1];
+let knightPosition = [0, 1];
+
+const legalMoves = [
+  [2, 1],
+  [2, -1],
+  [-2, 1],
+  [-2, -1],
+  [1, 2],
+  [-1, 2],
+  [1, -2],
+  [-1, -2],
+];
+
+const movesTaken = [];
+
+const knightGoal = [2, 2];
+
+// Need a function that uses Breadth-First search by visiting all the possible methods of getting to the user's square and choosing the shortest one.
+
+const knightMoves = () => {
+  console.log("knightPosition", knightPosition);
+  console.log("knightGoal", knightGoal);
+
+  if (knightPosition !== knightGoal) {
+    knightPosition[0] = knightPosition[0] + legalMoves[0][0];
+    knightPosition[1] = knightPosition[1] + legalMoves[0][1];
+    movesTaken.push(knightPosition);
+    console.log(movesTaken);
+  }
+
+  setKnightPosition();
+};
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
@@ -59,35 +90,37 @@ const idGameboard = () => {
   }
 };
 
-// Matches the position of the knight to the startPosition array.
+// Matches the position of the knight to the knightPosition array.
 const setKnightPosition = () => {
   for (let i = 0; i < 64; i++) {
-    if (startPosition.toString() === gameboard.childNodes[i].dataset.coord) {
+    if (knightPosition.toString() === gameboard.childNodes[i].dataset.coord) {
       return gameboard.childNodes[i].appendChild(knightImg);
     }
   }
 };
 
-const knightMoves = () => {
-  let knightPosition = [2, 1];
-  console.log(knight);
-  knight.addEventListener("click", (e) => {
-    console.log("knight clicked");
-    knightPosition = [4, 2];
-    console.log(knightPosition);
+const stayOnGameboard = () => {
+  knightPosition.forEach((element) => {
+    if (element < 0 || element > 7) return false;
+    else return true;
   });
 };
 
+// Changes the knight's position to whichever cell is clicked on the chessboard.
 const clickKnightPosition = () => {
-  gameboard.forEach((child) =>
-    addEventListener("click", (e) => {
-      console.log(child);
-    })
-  );
+  for (let i = 0; i < 64; i++) {
+    gameboard.children[i].addEventListener("click", (e) => {
+      //   console.log(gameboard.children[i].dataset.coord);
+      knightPosition = gameboard.children[i].dataset.coord;
+      setKnightPosition();
+    });
+  }
 };
 
 createGameboard();
 idGameboard();
 setKnightPosition();
 
-// clickKnightPosition();
+clickKnightPosition();
+stayOnGameboard();
+knightMoves();
