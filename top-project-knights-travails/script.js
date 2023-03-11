@@ -1,18 +1,8 @@
-// For this project, you’ll need to use a data structure that’s similar (but not identical) to a binary tree.
-// For a summary of a few different examples, reference this article.
-
-// Your task is to build a function knightMoves that shows the shortest possible way to get from one square to another by outputting all squares the knight will stop on along the way.
-
-// You can think of the board as having 2-dimensional coordinates. Your function would therefore look like:
-
 // knightMoves([0,0],[1,2]) == [[0,0],[1,2]]
 // knightMoves([0,0],[3,3]) == [[0,0],[1,2],[3,3]]
 // knightMoves([3,3],[0,0]) == [[3,3],[1,2],[0,0]]
 
-// 1. Put together a script that creates a game board and a knight. → DONE
-// 2. Treat all possible moves the knight could make as children in a tree. Don’t allow any moves to go off the board. → DONE
-// 3. Decide which search algorithm is best to use for this case. Hint: one of them could be a potentially infinite series. → DONE
-
+// 3. Decide which search algorithm is best to use for this case. Hint: one of them could be a potentially infinite series.
 // 4. Use the chosen search algorithm to find the shortest path between the starting square (or node) and the ending square. Output what that full path looks like, e.g.:
 //   > knightMoves([3,3],[4,3])
 //   => You made it in 3 moves!  Here's your path:
@@ -48,11 +38,11 @@ const legalMoves = [
 ];
 
 // Determines the starting position of the knight.
-let knightPosition = [3, 3];
+let knightPosition = [0, 1];
 
 const movesQueue = [[0, 1]];
 const visited = [];
-const knightGoal = [4, 3];
+const knightGoal = [6, 4];
 
 const checkIfValid = (newPosition) => {
   // If the new position is outside of the board, then return false
@@ -62,6 +52,7 @@ const checkIfValid = (newPosition) => {
   // console.log(visited);
   visited.push(newPosition);
   // console.log(visited);
+  return true;
 };
 
 function updateKnight(ms, tempKnight) {
@@ -86,18 +77,19 @@ const knightMoves = async () => {
     for (let i = 0; i < 8; i++) {
       // Take the first move from the queue and work on that one.
       let tempKnight = [...movesQueue[0]];
+      console.table(movesQueue);
       // Test each move using the iterator.
       tempKnight[0] = tempKnight[0] + legalMoves[i][0];
       tempKnight[1] = tempKnight[1] + legalMoves[i][1];
       // Set the value that's now to be checked.
       let newValue = [tempKnight[0], tempKnight[1]];
       // Check if the move is valid (not outside the board and hasn't been visisted before).
-      if (checkIfValid(newValue) === false) continue;
+      if (!checkIfValid(newValue)) continue;
       // Update the position of the knight on the board with a promise using setTimeout.
-      await updateKnight(30, tempKnight);
-      numOfMoves++;
+      await updateKnight(100, tempKnight);
       // Check if the knight has found the goal.
       if (newValue.toString() === knightGoal.toString()) {
+        numOfMoves++;
         console.log(`You made it in ${numOfMoves} moves! Here's your path:`);
         return true;
       }
@@ -106,16 +98,9 @@ const knightMoves = async () => {
     }
     // Remove the value from the queue.
     movesQueue.shift();
+    numOfMoves++;
   }
 };
-
-// 4. Use the chosen search algorithm to find the shortest path between the starting square (or node) and the ending square. Output what that full path looks like, e.g.:
-//   > knightMoves([3,3],[4,3])
-//   => You made it in 3 moves!  Here's your path:
-// [3,3]
-// [4,5]
-// [2,4]
-// [4,3]
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
