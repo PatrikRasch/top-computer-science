@@ -39,19 +39,26 @@ const legalMoves = [
 
 // Determines the starting position of the knight.
 let knightPosition = [0, 1];
+const knightGoal = [0, 7];
+const visitedMap = new Map();
+const visitedArray = [[...knightPosition]];
 
-const movesQueue = [[0, 1]];
-const visited = [];
-const knightGoal = [6, 4];
+const startingPoint = [...knightPosition];
+const movesQueue = [[[startingPoint], 0]];
+let numOfMoves = 0;
+visitedMap.set(startingPoint, numOfMoves);
 
-const checkIfValid = (newPosition) => {
+const checkIfValid = (newPosition, numOfMoves) => {
   // If the new position is outside of the board, then return false
   if (newPosition[0] < 0 || newPosition[1] < 0 || newPosition[1] > 7 || newPosition[0] > 7) return false;
-  // If the new position exists in the visited array, then return false
-  if (visited.some((subArray) => subArray.toString() === newPosition.toString())) return false;
-  // console.log(visited);
-  visited.push(newPosition);
-  // console.log(visited);
+  if (visitedArray.some((subArray) => subArray.toString() === newPosition.toString())) return false;
+
+  if (visitedArray.includes(newPosition)) {
+    console.log("lol");
+    return false;
+  } else visitedArray.push(newPosition);
+
+  visitedMap.set(newPosition, numOfMoves++);
   return true;
 };
 
@@ -61,44 +68,41 @@ function updateKnight(ms, tempKnight) {
       knightPosition[0] = tempKnight[0];
       knightPosition[1] = tempKnight[1];
       setKnightPosition();
-      console.log(knightPosition);
       resolve(tempKnight);
     }, ms)
   );
 }
 
+// Store moves and submoves as subarrays within the map within a key - value pair
+// Every time a move is tried and is valid, add/set the new move and it's previous move
 const knightMoves = async () => {
-  visited.push(knightPosition);
-  // Initialise the number of moves the knight has taken to get to its goal.
-  let numOfMoves = 0;
-  while (knightPosition.toString() !== knightGoal.toString()) {
+  visitedMap.set(knightPosition, 0);
+  while (movesQueue.length > 0) {
     // Take all legalMoves and test them on the knight. If the moves are valid, push them into the movesQueue.
     // Loop as 8 iterations as the knight can always make 8 possible moves.
     for (let i = 0; i < 8; i++) {
       // Take the first move from the queue and work on that one.
-      let tempKnight = [...movesQueue[0]];
-      console.table(movesQueue);
+      let tempKnight = [...movesQueue[0][0][0]];
+      numOfMoves = movesQueue[0][1] + 1;
       // Test each move using the iterator.
       tempKnight[0] = tempKnight[0] + legalMoves[i][0];
       tempKnight[1] = tempKnight[1] + legalMoves[i][1];
       // Set the value that's now to be checked.
       let newValue = [tempKnight[0], tempKnight[1]];
       // Check if the move is valid (not outside the board and hasn't been visisted before).
-      if (!checkIfValid(newValue)) continue;
+      if (!checkIfValid(newValue, numOfMoves)) continue;
       // Update the position of the knight on the board with a promise using setTimeout.
-      await updateKnight(100, tempKnight);
+      await updateKnight(1, tempKnight);
       // Check if the knight has found the goal.
       if (newValue.toString() === knightGoal.toString()) {
-        numOfMoves++;
         console.log(`You made it in ${numOfMoves} moves! Here's your path:`);
         return true;
       }
       // Since the value is valid but not the target end value, add it to the queue.
-      movesQueue.push(newValue);
+      movesQueue.push([[newValue], numOfMoves]);
     }
     // Remove the value from the queue.
     movesQueue.shift();
-    numOfMoves++;
   }
 };
 
@@ -150,6 +154,5 @@ const clickKnightPosition = () => {
 createGameboard();
 idGameboard();
 setKnightPosition();
-
 clickKnightPosition();
 knightMoves();
