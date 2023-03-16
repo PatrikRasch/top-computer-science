@@ -1,21 +1,13 @@
-// knightMoves([0,0],[1,2]) == [[0,0],[1,2]]
-// knightMoves([0,0],[3,3]) == [[0,0],[1,2],[3,3]]
-// knightMoves([3,3],[0,0]) == [[3,3],[1,2],[0,0]]
-
-// 3. Decide which search algorithm is best to use for this case. Hint: one of them could be a potentially infinite series.
-// 4. Use the chosen search algorithm to find the shortest path between the starting square (or node) and the ending square. Output what that full path looks like, e.g.:
-//   > knightMoves([3,3],[4,3])
-//   => You made it in 3 moves!  Here's your path:
-// [3,3]
-// [4,5]
-// [2,4]
-// [4,3]
-
-// ------------- MY NOTES BELOW -------------
-// Need a function that uses Breadth-First search by visiting all the possible methods of getting to the user's square and choosing the shortest one.
-// 1. Write a function that checks if the position is correct. If not, it takes every move possible from the current position and adds it into the queue
-// 2. For every move, check if the move is valid (hasn't been visited before and is on the board)
-// This way, we will always check every level before moving on to the "children steps".
+// CP: Retrace the steps of the knight
+// Q: Is it best here to create a graph of the entire chessboard first?
+//    - That is, a key for each square with all of its edges/values/possible-moves attached.
+//      In this way, the knight won't need to update any values as it traverses the chessboard.
+//    - This should somehow allow for retracing of the knight's moves.
+// Currently, the knight creates the graph as it goes, but doesn't create a undirectional graph.
+// This makes it an incomplete graph.
+// Q: How would the knight traverse the graph if we made the entire graph first?
+//    - Using breadth-first search just as it already does.
+// Would still need to ensure the move was valid (visited and on the board).
 
 const container = document.querySelector(".container");
 const gameboardNumbers = document.querySelector(".gameboardNumbers");
@@ -37,73 +29,112 @@ const legalMoves = [
   [-1, -2],
 ];
 
-// Determines the starting position of the knight.
-let knightPosition = [0, 1];
-const knightGoal = [0, 7];
-const visitedMap = new Map();
-const visitedArray = [[...knightPosition]];
+const knightStart = [0, 1]; // Get from user later on
+const knightGoal = [7, 7]; // Where the knight should end up
+const chessboardGraph = new Map(); // Map
+const visitedArray = [[...knightStart]]; //
 
-const startingPoint = [...knightPosition];
+const startingPoint = [...knightStart];
 const movesQueue = [[[startingPoint], 0]];
-let numOfMoves = 0;
-visitedMap.set(startingPoint, numOfMoves);
+let numOfMoves = 0; // Number of "new" moves knight has taken
 
-const checkIfValid = (newPosition, numOfMoves) => {
-  // If the new position is outside of the board, then return false
-  if (newPosition[0] < 0 || newPosition[1] < 0 || newPosition[1] > 7 || newPosition[0] > 7) return false;
-  if (visitedArray.some((subArray) => subArray.toString() === newPosition.toString())) return false;
-
-  if (visitedArray.includes(newPosition)) {
-    console.log("lol");
-    return false;
-  } else visitedArray.push(newPosition);
-
-  visitedMap.set(newPosition, numOfMoves++);
+const checkIfValid = (testPosition, nextPosition) => {
+  // If the next position is outside of the board, return false
+  if (nextPosition[0] < 0 || nextPosition[1] < 0 || nextPosition[1] > 7 || nextPosition[0] > 7) return false;
+  // If the next position has already been visited, return false
+  if (visitedArray.some((subArray) => subArray.toString() === nextPosition.toString())) return false;
+  visitedArray.push(nextPosition);
   return true;
 };
+// const checkIfInMap = (testPosition, nextPosition) => {
+//   if (chessboardGraph.size === 0) addNode(testPosition); // If map is empty, add testPosition
+//   // Iterate over all keys in the map
+//   for (const key of chessboardGraph.keys()) {
+//     // If there's a key that matches testPosition, take the key and push nextPosition into its value
+//     if (key.toString() === testPosition.toString()) {
+//       return chessboardGraph.get(key).push(nextPosition);
+//     }
+//   }
+//   addNode(testPosition); // If no match, make new node
+//   return true;
+// };
 
-function updateKnight(ms, tempKnight) {
+// Makes the graph for the chessboard covering all possible moves
+const createGraph = () => {
+  // Add values to all nodes
+  let squaresArray = [];
+  // Push squares into array
+  for (let child of gameboard.childNodes) {
+    let pushIntoArray = [parseInt(child.dataset.coord[0]), parseInt(child.dataset.coord[2])];
+    squaresArray.push(pushIntoArray);
+  }
+  for (square of squaresArray) {
+    addNode(square); // Makes nodes for every square square
+    for (let i = 0; i < 8; i++) {
+      let testMove = [square[0] + legalMoves[i][0], square[1] + legalMoves[i][1]]; // Make a test move
+      if (testMove[0] < 0 || testMove[1] < 0 || testMove[1] > 7 || testMove[0] > 7) continue; // Check if on board
+      addEdge(square, testMove); // Add edges/links/value to all squares
+    }
+  }
+};
+
+// Add node. Adds key as the square the knight is currently in
+const addNode = (square) => {
+  chessboardGraph.set(square, []);
+};
+
+// Add edge, undirected. The values are arrays of edges (the other squares the current square is connected to)
+const addEdge = (origin, destination) => {
+  chessboardGraph.get(origin).push(destination);
+};
+
+function updateKnight(ms, testPosition) {
   return new Promise((resolve) =>
     setTimeout(() => {
-      knightPosition[0] = tempKnight[0];
-      knightPosition[1] = tempKnight[1];
-      setKnightPosition();
-      resolve(tempKnight);
+      knightStart[0] = testPosition[0];
+      knightStart[1] = testPosition[1];
+      setknightStart();
+      resolve(testPosition);
     }, ms)
   );
 }
 
-// Store moves and submoves as subarrays within the map within a key - value pair
-// Every time a move is tried and is valid, add/set the new move and it's previous move
-const knightMoves = async () => {
-  visitedMap.set(knightPosition, 0);
+const knightMoves = async (knightStart, knightGoal) => {
+  // The child nodes need to point back at their respective parent nodes:
+  // Every time the knight visits a square, make a new node.
+  // The node should have the new square as it's key and where it came from as its parent
+  // This way, every time the knight lands on a new square, it'll point back to where it came from
+  // → Allows for retracing!
+  let parentMap = new Map();
   while (movesQueue.length > 0) {
-    // Take all legalMoves and test them on the knight. If the moves are valid, push them into the movesQueue.
-    // Loop as 8 iterations as the knight can always make 8 possible moves.
+    let testPosition = [...movesQueue[0][0][0]]; // Takes the first move from the queue
+    // Test all legalMoves on the knight.
     for (let i = 0; i < 8; i++) {
-      // Take the first move from the queue and work on that one.
-      let tempKnight = [...movesQueue[0][0][0]];
-      numOfMoves = movesQueue[0][1] + 1;
-      // Test each move using the iterator.
-      tempKnight[0] = tempKnight[0] + legalMoves[i][0];
-      tempKnight[1] = tempKnight[1] + legalMoves[i][1];
-      // Set the value that's now to be checked.
-      let newValue = [tempKnight[0], tempKnight[1]];
-      // Check if the move is valid (not outside the board and hasn't been visisted before).
-      if (!checkIfValid(newValue, numOfMoves)) continue;
-      // Update the position of the knight on the board with a promise using setTimeout.
-      await updateKnight(1, tempKnight);
+      numOfMoves = movesQueue[0][1] + 1; // Adds +1 to number of moves for this move
+      // Test all legal moves on the queue item
+      let nextPosition = [testPosition[0] + legalMoves[i][0], testPosition[1] + legalMoves[i][1]];
+      if (!checkIfValid(testPosition, nextPosition)) continue; // Check if the move is valid
+      await updateKnight(1, nextPosition); // Update knight position using a setTimeout
+      parentMap.set(nextPosition, testPosition);
       // Check if the knight has found the goal.
-      if (newValue.toString() === knightGoal.toString()) {
+      if (nextPosition.toString() === knightGoal.toString()) {
         console.log(`You made it in ${numOfMoves} moves! Here's your path:`);
+        console.log(parentMap);
+        retraceKnight(knightGoal, parentMap);
         return true;
       }
-      // Since the value is valid but not the target end value, add it to the queue.
-      movesQueue.push([[newValue], numOfMoves]);
+      movesQueue.push([[nextPosition], numOfMoves]); // Since move is valid, but not the goal, add to queue.
     }
-    // Remove the value from the queue.
-    movesQueue.shift();
+    movesQueue.shift(); // Remove the value from the queue.
   }
+};
+// CP: Finish this function and implement it into the knightMoves function
+const retraceKnight = (knightGoal, parentMap) => {
+  console.log(knightGoal);
+  // Turn all parentMap items into strings
+  parentMap.forEach((element) => {
+    console.log(element);
+  });
 };
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
@@ -131,28 +162,29 @@ const idGameboard = () => {
   }
 };
 
-// Matches the position of the knight to the knightPosition array.
-const setKnightPosition = () => {
+// Matches the position of the knight to the knightStart array.
+const setknightStart = () => {
   for (let i = 0; i < 64; i++) {
-    if (knightPosition.toString() === gameboard.childNodes[i].dataset.coord) {
+    if (knightStart.toString() === gameboard.childNodes[i].dataset.coord) {
       return gameboard.childNodes[i].appendChild(knightImg);
     }
   }
 };
 
 // Changes the knight's position to whichever cell is clicked on the chessboard.
-const clickKnightPosition = () => {
+const clickknightStart = () => {
   for (let i = 0; i < 64; i++) {
     gameboard.children[i].addEventListener("click", (e) => {
       //   console.log(gameboard.children[i].dataset.coord);
-      knightPosition = gameboard.children[i].dataset.coord;
-      setKnightPosition();
+      knightStart = gameboard.children[i].dataset.coord;
+      setknightStart();
     });
   }
 };
 
 createGameboard();
 idGameboard();
-setKnightPosition();
-clickKnightPosition();
-knightMoves();
+setknightStart();
+clickknightStart();
+knightMoves(knightStart, knightGoal);
+createGraph();
