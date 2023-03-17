@@ -99,7 +99,7 @@ function updateKnight(ms, testPosition) {
   );
 }
 
-const knightMoves = async (knightStart, knightGoal) => {
+const knightMoves = async (knightGoal, startingPoint) => {
   // The child nodes need to point back at their respective parent nodes:
   // Every time the knight visits a square, make a new node.
   // The node should have the new square as it's key and where it came from as its parent
@@ -119,8 +119,7 @@ const knightMoves = async (knightStart, knightGoal) => {
       // Check if the knight has found the goal.
       if (nextPosition.toString() === knightGoal.toString()) {
         console.log(`You made it in ${numOfMoves} moves! Here's your path:`);
-        console.log(parentMap);
-        retraceKnight(knightGoal, parentMap);
+        retraceKnight(startingPoint, knightGoal, parentMap);
         return true;
       }
       movesQueue.push([[nextPosition], numOfMoves]); // Since move is valid, but not the goal, add to queue.
@@ -129,12 +128,26 @@ const knightMoves = async (knightStart, knightGoal) => {
   }
 };
 // CP: Finish this function and implement it into the knightMoves function
-const retraceKnight = (knightGoal, parentMap) => {
-  console.log(knightGoal);
+const retraceKnight = (startingPoint, knightGoal, parentMap) => {
+  // We need to access the square the knight is currently on in the parentMap
+  // Then, we have to use its value to see where it came from
+  // This must be repeated until the value it's pointing to is the startingPoint.
   // Turn all parentMap items into strings
-  parentMap.forEach((element) => {
-    console.log(element);
-  });
+  let track = knightGoal;
+  let resultArray = [];
+  while (track.toString() !== startingPoint.toString()) {
+    parentMap.forEach((key, value) => {
+      if (value.toString() === track.toString()) {
+        track = key;
+        resultArray.push(track);
+      }
+    });
+  }
+  resultArray.reverse();
+  resultArray.push(knightGoal);
+  for (let i = 0; i < resultArray.length; i++) {
+    console.log(resultArray[i]);
+  }
 };
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
@@ -186,5 +199,5 @@ createGameboard();
 idGameboard();
 setknightStart();
 clickknightStart();
-knightMoves(knightStart, knightGoal);
+knightMoves(knightGoal, startingPoint);
 createGraph();
