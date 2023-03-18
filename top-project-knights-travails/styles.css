@@ -10,7 +10,26 @@ body {
   --cell: 75px;
 }
 
-.container {
+@font-face {
+  font-family: Assistant;
+  src: url(fonts/Assistant/Assistant-Regular.ttf);
+}
+@font-face {
+  font-family: Assistant-SemiBold;
+  src: url(fonts/Assistant/Assistant-SemiBold.ttf);
+}
+
+.headerTitle {
+  font-size: 50px;
+  font-family: Assistant-SemiBold;
+  letter-spacing: 6px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.chessboardContainer {
   width: 750px;
   height: 750px;
   background-color: darkslategrey;
@@ -76,4 +95,54 @@ body {
   max-width: 65px;
   /* top: 528px; */
   /* left: 80px; */
+}
+
+.positions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 750px;
+  font-size: 40px;
+  font-family: Assistant-SemiBold;
+  justify-items: center;
+  align-items: center;
+  height: 200px;
+}
+
+.startingPosition,
+.endPosition {
+  font-size: 60px;
+  color: white;
+  text-align: center;
+  font-family: Assistant;
+  width: 125px;
+  height: 100px;
+  border-radius: 10px;
+  border: none;
+  background-color: darkslategray;
+}
+
+.playButtonWrapper {
+  display: grid;
+  justify-items: center;
+  margin: 20px;
+}
+
+.playButton {
+  font-size: 40px;
+  font-family: Assistant;
+  color: white;
+  border-radius: 15px;
+  border: 0px;
+  width: 510px;
+  padding: 15px 25px 15px 25px;
+  background-color: darkslategray;
+  transition: 0.2s;
+}
+
+.playButton:hover {
+  background-color: rgb(30, 50, 50);
+}
+
+.playButton:active {
+  transform: scale(0.95);
 }
