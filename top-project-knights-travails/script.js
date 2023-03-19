@@ -152,6 +152,10 @@ const knightMoves = async (startingPoint, userInputEnd, speed, initialPosition) 
     let testPosition = [...movesQueue[0][0][0]]; // Takes the first move from the queue
     // Test all legalMoves on the knight.
     for (let i = 0; i < 8; i++) {
+      slider.addEventListener("input", (e) => {
+        speedDisplayNumber.textContent = slider.value;
+        speed = slider.value;
+      });
       numOfMoves = movesQueue[0][1] + 1; // Adds +1 to number of moves for this move
       let nextPosition = [testPosition[0] + legalMoves[i][0], testPosition[1] + legalMoves[i][1]]; // Test all legal moves on the queue item
       if (!checkIfValid(nextPosition)) continue; // Check if the move is valid
