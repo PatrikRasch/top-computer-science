@@ -40,35 +40,72 @@ body {
   position: relative;
 }
 
+.sliderContainer {
+  position: absolute;
+}
+
 .speedHeader {
   position: absolute;
-  font-size: 40px;
-  font-family: Assistant-SemiBold;
+  top: 5px;
   left: -140px;
-  top: 10px;
+}
+
+.speedHeaderTitle {
+  position: absolute;
+  font-size: 40px;
+  top: -10px;
+  font-family: Assistant-SemiBold;
+}
+
+.speedHeaderDescription {
+  position: absolute;
+  left: 18px;
+  top: 43px;
+  font-size: 20px;
+  font-style: italic;
+  font-family: Assistant-SemiBold;
 }
 
 .speedDisplay {
   position: absolute;
-  font-size: 40px;
-  font-family: Assistant-SemiBold;
-  left: -200px;
+  height: 100px;
 }
 
-.speedSlider {
+.speedDisplayNumber {
+  width: 100px;
+  /* background-color: red; */
+  position: absolute;
+  font-size: 40px;
+  font-family: Assistant-SemiBold;
+  left: -210px;
+  text-align: center;
+}
+
+.speedDisplayMs {
+  width: 100px;
+  position: absolute;
+  font-size: 20px;
+  font-style: italic;
+  font-family: Assistant-SemiBold;
+  left: -210px;
+  top: 50px;
+  text-align: center;
+}
+
+.slider {
   -webkit-appearance: none;
   appearance: none;
   transform: rotate(-90deg);
   position: absolute;
-  top: 50;
   left: -380px;
   width: 600px;
   border-radius: 15px;
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.speedSlider::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 10px;
@@ -133,11 +170,6 @@ body {
   width: 100px;
   transform: translate(-16px);
 }
-
-/* .visited {
-  background-color: darkslategray;
-  transition: 1s;
-} */
 
 .img3Display {
   width: 55px;
@@ -224,6 +256,18 @@ body {
   border-radius: 10px;
   border: none;
   background-color: darkslategray;
+}
+
+#error {
+  display: none;
+  color: red;
+  position: absolute;
+  font-family: Assistant;
+  font-size: 30px;
+  top: 920px;
+  width: 225px;
+  height: 75px;
+  text-align: center;
 }
 
 .playButtonWrapper {

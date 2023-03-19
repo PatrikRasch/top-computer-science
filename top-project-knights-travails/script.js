@@ -25,8 +25,9 @@ selectImage.forEach((image) => {
   });
 });
 
-const speedSlider = document.querySelector(".speedSlider");
-const speedDisplay = document.querySelector(".speedDisplay");
+const slider = document.querySelector(".slider");
+const thumb = document.getElementById("thumb");
+const speedDisplayNumber = document.querySelector(".speedDisplayNumber");
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
@@ -202,7 +203,27 @@ const retraceKnight = (initialPosition, userInputEnd, parentMap) => {
   }
 };
 
+const validLetters = ["A", "B", "C", "D", "E", "F", "G", "H"];
+const validNumbers = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
+const validateInput = (userInput) => {
+  userInput.value = userInput.value.toUpperCase();
+  if (userInput.value.length > 0) {
+    if (!validLetters.includes(userInput.value[0])) {
+      userInput.value = "";
+      error.style.display = "block";
+    } else error.style.display = "none";
+  }
+  if (userInput.value.length > 1) {
+    if (!validNumbers.includes(userInput.value[1])) {
+      userInput.value = userInput.value[0] + "";
+      error.style.display = "block";
+    } else error.style.display = "none";
+  }
+};
+
 userInputStart.addEventListener("input", (e) => {
+  validateInput(userInputStart);
   const userInputStartCoordinates = convertCoordinatesToArray(userInputStart);
   placeKnightOnBoard(userInputStartCoordinates);
   resultArrayCoordinates = [];
@@ -211,6 +232,7 @@ userInputStart.addEventListener("input", (e) => {
 });
 
 userInputEnd.addEventListener("input", (e) => {
+  validateInput(userInputEnd);
   const userInputEndCoordinates = convertCoordinatesToArray(userInputEnd);
   resultArrayCoordinates = [];
   parentMap = [];
@@ -225,13 +247,13 @@ run.addEventListener("click", (e) => {
   knightMoves(userInputStartConverted, userInputEndConverted, speed, initialPosition);
 });
 
-speedSlider.addEventListener("input", (e) => {
-  speedDisplay.textContent = speedSlider.value;
-  speed = speedSlider.value;
+slider.addEventListener("input", (e) => {
+  speedDisplayNumber.textContent = slider.value;
+  speed = slider.value;
 });
 
 const chessboardGraph = new Map(); // Map
-let speed = speedSlider.value;
+let speed = slider.value;
 
 const legalMoves = [
   [2, 1],

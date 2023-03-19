@@ -11,9 +11,18 @@
   <body>
     <div class="headerTitle">KNIGHTS TRAVAILS</div>
     <div class="chessboardContainer">
-      <div class="speedHeader">SPEED</div>
-      <div class="speedDisplay">100</div>
-      <input type="range" name="speedSlider" class="speedSlider" min="1" max="1000" value="100" />
+      <div class="speedHeader">
+        <div class="speedHeaderTitle">SPEED</div>
+        <div class="speedHeaderDescription">ms/move</div>
+      </div>
+      <div class="speedDisplay">
+        <div class="speedDisplayNumber">100</div>
+        <div class="speedDisplayMs">ms</div>
+      </div>
+      <div class="sliderContainer">
+        <input type="range" name="slider" class="slider" min="1" max="1000" value="100" />
+        <!-- <div id="thumb"></div> -->
+      </div>
 
       <div class="imgHeader">CHOOSE YOUR FIGHTER</div>
       <div class="imgContainer">
@@ -71,8 +80,9 @@
       <div class="positions">
         <div class="startingPositionTitle">START POSITION</div>
         <div class="endPositionTitle">END POSITION</div>
-        <input type="text" class="startingPosition" placeholder="A1" />
-        <input type="text" class="endPosition" placeholder="H8" />
+        <input type="text" class="startingPosition" placeholder="A1" maxlength="2" />
+        <p id="error">Only chessboard squares allowed</p>
+        <input type="text" class="endPosition" placeholder="H8" maxlength="2" />
       </div>
       <div class="playButtonWrapper">
         <button class="playButton">Run the Knight</button>
