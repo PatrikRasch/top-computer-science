@@ -37,6 +37,113 @@ body {
   justify-content: center;
   align-items: center;
   grid-template-columns: 1fr 8fr 1fr;
+  position: relative;
+}
+
+.speedHeader {
+  position: absolute;
+  font-size: 40px;
+  font-family: Assistant-SemiBold;
+  left: -140px;
+  top: 10px;
+}
+
+.speedDisplay {
+  position: absolute;
+  font-size: 40px;
+  font-family: Assistant-SemiBold;
+  left: -200px;
+}
+
+.speedSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  transform: rotate(-90deg);
+  position: absolute;
+  top: 50;
+  left: -380px;
+  width: 600px;
+  border-radius: 15px;
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.speedSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  transform: scale(1.5);
+  background: darkslategray;
+  cursor: pointer;
+}
+
+.imgHeader {
+  position: absolute;
+  font-size: 40px;
+  font-family: Assistant-SemiBold;
+  left: 800px;
+  top: 10px;
+  text-align: center;
+}
+
+.imgContainer {
+  position: absolute;
+  max-width: 100px;
+  right: -130px;
+  top: 200px;
+  display: grid;
+  grid-template-columns: 100px 100px;
+  justify-items: center;
+  align-items: center;
+}
+
+.imgDisplay {
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.imgDisplay:active {
+  transform: scale(0.95);
+}
+
+.imgDisplay:hover {
+  transform: scale(1.05);
+}
+
+.img1 {
+  max-width: 100px;
+}
+.img2 {
+  max-width: 170px;
+}
+
+.img3 {
+  max-width: 100px;
+}
+
+.img4 {
+  max-width: 80px;
+}
+
+.img1Display {
+  width: 65px;
+}
+
+.img2Display {
+  width: 100px;
+  transform: translate(-16px);
+}
+
+/* .visited {
+  background-color: darkslategray;
+  transition: 1s;
+} */
+
+.img3Display {
+  width: 55px;
+}
+.img4Display {
+  width: 50px;
 }
 
 .gameboardWrapper {
@@ -90,11 +197,9 @@ body {
   /* background-color: rgba(240, 223, 195, 255); */
 }
 
-.knightImg {
+.defaultImg {
   position: absolute;
-  max-width: 65px;
-  /* top: 528px; */
-  /* left: 80px; */
+  width: 65px;
 }
 
 .positions {
@@ -137,6 +242,7 @@ body {
   padding: 15px 25px 15px 25px;
   background-color: darkslategray;
   transition: 0.2s;
+  cursor: pointer;
 }
 
 .playButton:hover {

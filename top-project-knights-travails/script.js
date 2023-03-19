@@ -7,9 +7,26 @@ const userInputEnd = document.querySelector(".endPosition");
 const run = document.querySelector(".playButton");
 const result = document.querySelector(".result");
 
-const knightImg = document.createElement("img");
-knightImg.src = "img/knight-pixel-art.png";
-knightImg.setAttribute("class", "knightImg");
+const defaultImg = document.createElement("img");
+defaultImg.src = "img/knight-pixel-art.png";
+defaultImg.setAttribute("class", "defaultImg");
+
+const selectImage = document.querySelectorAll(".imgDisplay");
+
+selectImage.forEach((image) => {
+  image.addEventListener("click", (e) => {
+    defaultImg.src = image.src;
+    for (let i = 0; i <= selectImage.length; i++) {
+      if (image.classList.contains(`img${i}`)) {
+        defaultImg.classList.value = "";
+        defaultImg.classList.add(`img${i}Display`);
+      }
+    }
+  });
+});
+
+const speedSlider = document.querySelector(".speedSlider");
+const speedDisplay = document.querySelector(".speedDisplay");
 
 // Creates the chessboard squares using two nested loops and labels the cells as either white or black respectively.
 const createGameboard = () => {
@@ -49,7 +66,6 @@ const convertCoordinatesToArray = (toConvert) => {
 const convertCoordinatesToId = (resultArray) => {
   for (let i = 0; i < 64; i++) {
     if (resultArray.toString() === gameboard.childNodes[i].dataset.coord) {
-      console.log(gameboard.childNodes[i].id);
       resultArrayCoordinates.push(gameboard.childNodes[i].id);
     }
   }
@@ -59,7 +75,7 @@ const convertCoordinatesToId = (resultArray) => {
 const placeKnightOnBoard = (userInputStart) => {
   for (let i = 0; i < 64; i++) {
     if (userInputStart.toString() === gameboard.childNodes[i].dataset.coord) {
-      return gameboard.childNodes[i].appendChild(knightImg);
+      return gameboard.childNodes[i].appendChild(defaultImg);
     }
   }
 };
@@ -84,6 +100,16 @@ const checkIfValid = (nextPosition) => {
   return true;
 };
 
+// const changeColourIfVisited = () => {
+//   for (let i = 0; i < 64; i++) {
+//     if (visitedSquaresArr.toString().includes(gameboard.childNodes[i].dataset.coord)) {
+//       gameboard.childNodes[i].classList = "";
+//       gameboard.childNodes[i].classList.add("visited");
+//       gameboard.childNodes[i].classList.add("cell");
+//     }
+//   }
+// };
+
 // Add node. Adds key as the square the knight is currently in
 const addNode = (square) => {
   chessboardGraph.set(square, []);
@@ -98,7 +124,7 @@ const addEdge = (origin, destination) => {
 const createGraph = (userInputStart) => {
   // initialPosition = [...userInputStart];
   startingPoint = [...userInputStart];
-  visitedSquaresArr = [...userInputStart];
+  visitedSquaresArr = [[...userInputStart]];
   movesQueue = [[[startingPoint], 0]];
   // Add values to all nodes
   let squaresArray = [];
@@ -128,6 +154,7 @@ const knightMoves = async (startingPoint, userInputEnd, speed, initialPosition) 
       numOfMoves = movesQueue[0][1] + 1; // Adds +1 to number of moves for this move
       let nextPosition = [testPosition[0] + legalMoves[i][0], testPosition[1] + legalMoves[i][1]]; // Test all legal moves on the queue item
       if (!checkIfValid(nextPosition)) continue; // Check if the move is valid
+      // changeColourIfVisited();
       parentMap.set(nextPosition, testPosition); // Update the parent map
       await updateKnight(speed, nextPosition, startingPoint); // Update knight position using a setTimeout
       // Check if the knight has found the goal.
@@ -178,11 +205,15 @@ const retraceKnight = (initialPosition, userInputEnd, parentMap) => {
 userInputStart.addEventListener("input", (e) => {
   const userInputStartCoordinates = convertCoordinatesToArray(userInputStart);
   placeKnightOnBoard(userInputStartCoordinates);
+  resultArrayCoordinates = [];
+  parentMap = [];
   return userInputStartCoordinates;
 });
 
 userInputEnd.addEventListener("input", (e) => {
   const userInputEndCoordinates = convertCoordinatesToArray(userInputEnd);
+  resultArrayCoordinates = [];
+  parentMap = [];
   return userInputEndCoordinates;
 });
 
@@ -194,8 +225,13 @@ run.addEventListener("click", (e) => {
   knightMoves(userInputStartConverted, userInputEndConverted, speed, initialPosition);
 });
 
+speedSlider.addEventListener("input", (e) => {
+  speedDisplay.textContent = speedSlider.value;
+  speed = speedSlider.value;
+});
+
 const chessboardGraph = new Map(); // Map
-const speed = 10;
+let speed = speedSlider.value;
 
 const legalMoves = [
   [2, 1],
