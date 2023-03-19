@@ -152,6 +152,11 @@ const knightMoves = async (startingPoint, userInputEnd, speed, initialPosition) 
     let testPosition = [...movesQueue[0][0][0]]; // Takes the first move from the queue
     // Test all legalMoves on the knight.
     for (let i = 0; i < 8; i++) {
+      // Monitor the slider for any speed changes. Placed here to ensure the slider works even when the knight is moving.
+      slider.addEventListener("input", (e) => {
+        speedDisplayNumber.textContent = slider.value;
+        speed = slider.value;
+      });
       numOfMoves = movesQueue[0][1] + 1; // Adds +1 to number of moves for this move
       let nextPosition = [testPosition[0] + legalMoves[i][0], testPosition[1] + legalMoves[i][1]]; // Test all legal moves on the queue item
       if (!checkIfValid(nextPosition)) continue; // Check if the move is valid
@@ -222,6 +227,11 @@ const validateInput = (userInput) => {
   }
 };
 
+slider.addEventListener("input", (e) => {
+  speedDisplayNumber.textContent = slider.value;
+  speed = slider.value;
+});
+
 userInputStart.addEventListener("input", (e) => {
   validateInput(userInputStart);
   const userInputStartCoordinates = convertCoordinatesToArray(userInputStart);
@@ -245,11 +255,6 @@ run.addEventListener("click", (e) => {
   const userInputEndConverted = convertCoordinatesToArray(userInputEnd);
   createGraph(userInputStartConverted);
   knightMoves(userInputStartConverted, userInputEndConverted, speed, initialPosition);
-});
-
-slider.addEventListener("input", (e) => {
-  speedDisplayNumber.textContent = slider.value;
-  speed = slider.value;
 });
 
 const chessboardGraph = new Map(); // Map

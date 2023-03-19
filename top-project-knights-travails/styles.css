@@ -285,11 +285,20 @@ body {
   width: 510px;
   padding: 15px 25px 15px 25px;
   background-color: darkslategray;
-  transition: 0.2s;
   cursor: pointer;
 }
 
-.playButton:hover {
+.playButton,
+.startingPosition,
+.endPosition,
+.slider::-webkit-slider-thumb {
+  transition: 0.2s;
+}
+
+.playButton:hover,
+.startingPosition:hover,
+.endPosition:hover,
+.slider::-webkit-slider-thumb:hover {
   background-color: rgb(30, 50, 50);
 }
 
